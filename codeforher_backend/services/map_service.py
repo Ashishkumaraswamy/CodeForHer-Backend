@@ -1,14 +1,14 @@
 from starlette import status
 
-from codeforher_backend.models.common import Location
+from geopy.geocoders import Nominatim
 from codeforher_backend.models.config import ServiceConfig
 import requests
 
-from codeforher_backend.models.maps import RouteRequest, NearbySafeSpotsRequest
+from codeforher_backend.models.maps import RouteRequest, NearbySafeSpotsRequest, AddressRequest
 from codeforher_backend.utils.helpers import raise_service_exception
 
 
-class OLAService:
+class MapService:
     def __init__(self, service_config: ServiceConfig):
         """Initialize OLA Config"""
 
@@ -125,3 +125,14 @@ class OLAService:
         response = self.http_request(url, method="GET")
 
         return response
+
+    def get_latitude_longitude(self, request: AddressRequest) -> dict:
+        geolocator = Nominatim(user_agent="geoapi")
+        location = geolocator.geocode(request.address)
+        if location:
+            return {
+                "latitude": location.latitude,
+                "longitude": location.longitude
+            }
+        else:
+            return None

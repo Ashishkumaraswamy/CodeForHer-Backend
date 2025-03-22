@@ -15,3 +15,6 @@ class NearbySafeSpotsRequest(BaseModel):
     place_types: Optional[list[str]] = None
     radius: Optional[int] = None
     rank_by: Optional[RankByCategory] = Field(RankByCategory.DISTANCE, description="Rank by category")
+
+class AddressRequest(BaseModel):
+    address: str
