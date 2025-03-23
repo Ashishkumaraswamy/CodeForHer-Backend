@@ -17,10 +17,10 @@ class LLMService:
     
     def get_llm(self) -> AzureChatOpenAI:
         return AzureChatOpenAI(
-            api_key="3e33b1a703db4eaf800657cfff73e2db",
-            openai_api_version="2024-02-01",
-            azure_endpoint="https://dg-llm-service-dev.openai.azure.com/",
-            azure_deployment="dg-llm-service-gpt-4o",
+            api_key=self.llm_config.api_key,
+            openai_api_version=self.llm_config.api_version,
+            azure_endpoint=self.llm_config.api_base,
+            azure_deployment=self.llm_config.llm_deployment_name,
         )
         
     def get_route_safety(self, route_safety_request: RouteSafetyRequest) -> RouteSafetyResponse:
