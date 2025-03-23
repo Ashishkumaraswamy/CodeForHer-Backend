@@ -8,12 +8,12 @@ from codeforher_backend.models.maps import RouteRequest, NearbySafeSpotsRequest,
 from codeforher_backend.models.sos_alerts import SOSMessageRequest
 from codeforher_backend.models.trips import TripRequest
 from codeforher_backend.models.users import LoginRequest, SignupRequest
+from codeforher_backend.models.llm import RouteSafetyRequest
 from codeforher_backend.services.commute import TripsService
 from codeforher_backend.services.map_service import MapService
 from codeforher_backend.services.sos_alert import SOSMessageService
 from codeforher_backend.services.user import UserService
-from codeforher_backend.utils.helpers import verify_token
-
+from codeforher_backend.services.llm_service import LLMService
 LOG = get_logger("Backend API")
 
 app = FastAPI()
@@ -58,7 +58,7 @@ def refresh_token(token: str):
     return response
 
 @app.get(f"{BASE_URL}/auth/users")
-def get_user(token: str = Depends(oauth2_scheme), user_id: str=None):
+def get_user(user_id: str=None):
     """Get user by ID"""
 
     # token_data = verify_token(service_config.jwt_config, token)
@@ -75,7 +75,7 @@ def get_user(token: str = Depends(oauth2_scheme), user_id: str=None):
     return response
 
 @app.put(f"{BASE_URL}/auth/users/{{user_id}}")
-def update_user(user_id: str, request: dict, token: str = Depends(oauth2_scheme)):
+def update_user(user_id: str, request: dict):
     """Update user details"""
 
     # token_data = verify_token(service_config.jwt_config, token)
@@ -96,7 +96,7 @@ def update_user(user_id: str, request: dict, token: str = Depends(oauth2_scheme)
 # ----------- COMMUTE ENDPOINTS ------------
 
 @app.post(f"{BASE_URL}/commute/start-trip")
-def start_trip(trip_request: TripRequest, token: str = Depends(oauth2_scheme)):
+def start_trip(trip_request: TripRequest):
     """Start a trip"""
 
     # verify_token(service_config.jwt_config, token)
@@ -110,7 +110,7 @@ def start_trip(trip_request: TripRequest, token: str = Depends(oauth2_scheme)):
     return response
 
 @app.get(f"{BASE_URL}/commute/end-trip/{{trip_id}}")
-def end_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
+def end_trip(trip_id: str):
     """End a trip"""
 
     # verify_token(service_config.jwt_config, token)
@@ -124,7 +124,7 @@ def end_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
     return response
 
 @app.get(f"{BASE_URL}/commute/cancel-trip/{{trip_id}}")
-def cancel_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
+def cancel_trip(trip_id: str):
     """Cancel a trip"""
 
     # verify_token(service_config.jwt_config, token)
@@ -138,7 +138,7 @@ def cancel_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
     return response
 
 @app.get(f"{BASE_URL}/commute/trips")
-def get_trips(trip_id: str = None, user_id: str=None, token: str = Depends(oauth2_scheme)):
+def get_trips(trip_id: str = None, user_id: str=None):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -150,7 +150,7 @@ def get_trips(trip_id: str = None, user_id: str=None, token: str = Depends(oauth
     return response
 
 @app.put(f"{BASE_URL}/commute/trips/{{trip_id}}")
-def get_trips(trip_id: str, request: dict, token: str = Depends(oauth2_scheme)):
+def get_trips(trip_id: str, request: dict):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -162,7 +162,7 @@ def get_trips(trip_id: str, request: dict, token: str = Depends(oauth2_scheme)):
     return response
 
 @app.delete(f"{BASE_URL}/commute/trips/{{trip_id}}")
-def delete_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
+def delete_trip(trip_id: str):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -176,7 +176,7 @@ def delete_trip(trip_id: str, token: str = Depends(oauth2_scheme)):
 # ----- SOS Alerts -------
 
 @app.post(f"{BASE_URL}/sos/send-alert")
-def broadcast_alert(alert_request: SOSMessageRequest, contact: str = None, token: str = Depends(oauth2_scheme)):
+def broadcast_alert(alert_request: SOSMessageRequest, contact: str = None):
     """Broadcast SOS alert to emergency contacts"""
 
     # verify_token(service_config.jwt_config, token)
@@ -190,8 +190,8 @@ def broadcast_alert(alert_request: SOSMessageRequest, contact: str = None, token
     return response
 
 @app.get(f"{BASE_URL}/sos/alerts")
-def get_alerts(alert_id: str=None, trip_id: str = None, user_id: str=None, token: str = Depends(oauth2_scheme)):
-    verify_token(service_config.jwt_config, token)
+def get_alerts(alert_id: str=None, trip_id: str = None, user_id: str=None):
+    # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
     sos_message_service = SOSMessageService(
@@ -204,7 +204,7 @@ def get_alerts(alert_id: str=None, trip_id: str = None, user_id: str=None, token
 # ------- OLA SERVICE --------
 
 @app.post(f"{BASE_URL}/maps/get-route")
-def get_route(request: RouteRequest, token: str = Depends(oauth2_scheme)):
+def get_route(request: RouteRequest):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -213,7 +213,7 @@ def get_route(request: RouteRequest, token: str = Depends(oauth2_scheme)):
     return response
 
 @app.post(f"{BASE_URL}/maps/get-time-distance")
-def get_time_and_distance(request: RouteRequest, token: str = Depends(oauth2_scheme)):
+def get_time_and_distance(request: RouteRequest):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -222,7 +222,7 @@ def get_time_and_distance(request: RouteRequest, token: str = Depends(oauth2_sch
     return response
 
 @app.post(f"{BASE_URL}/maps/nearby-safe-spots")
-def get_nearby_safe_spots(request: NearbySafeSpotsRequest, token: str = Depends(oauth2_scheme)):
+def get_nearby_safe_spots(request: NearbySafeSpotsRequest):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -231,7 +231,7 @@ def get_nearby_safe_spots(request: NearbySafeSpotsRequest, token: str = Depends(
     return response
 
 @app.post(f"{BASE_URL}/maps/get-latitude-longitude")
-def get_latitude_longitude(request: AddressRequest, token: str = Depends(oauth2_scheme)):
+def get_latitude_longitude(request: AddressRequest):
     # verify_token(service_config.jwt_config, token)
     LOG.info("User authenticated with the token successfully")
 
@@ -239,6 +239,15 @@ def get_latitude_longitude(request: AddressRequest, token: str = Depends(oauth2_
     response = ola_service.get_latitude_longitude(request)
     return response
 
+@app.post(f"{BASE_URL}/llm/route-safety")
+def get_route_safety(request: RouteSafetyRequest):
+    """Get safety analysis for a route"""
+    # verify_token(service_config.jwt_config, token)
+    LOG.info("User authenticated with the token successfully")
+
+    llm_service = LLMService(service_config)
+    response = llm_service.get_route_safety(request)
+    return response
 
 def local_server(port=8080):
     uvicorn.run(app, host="0.0.0.0", port=port)

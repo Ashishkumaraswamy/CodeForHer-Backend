@@ -125,14 +125,21 @@ class MapService:
         response = self.http_request(url, method="GET")
 
         return response
-
+    
     def get_latitude_longitude(self, request: AddressRequest) -> dict:
-        geolocator = Nominatim(user_agent="geoapi")
-        location = geolocator.geocode(request.address)
-        if location:
-            return {
-                "latitude": location.latitude,
-                "longitude": location.longitude
-            }
-        else:
-            return None
+        url = (
+            f"{self.OLA_API_URL}/places/v1/geocode"
+            f"?address={request.address}"
+            f"&api_key={self.ola_config.api_key}"
+        )
+        
+        response = self.http_request(url, method="GET")
+        print(response)
+        
+        processed_response = {
+            "latitude": response["geocodingResults"][0]["geometry"]["location"]["lat"],
+            "longitude": response["geocodingResults"][0]["geometry"]["location"]["lng"]
+        }
+        
+        return processed_response
+    

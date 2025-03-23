@@ -24,6 +24,12 @@ class JWTConfig(BaseModel):
     jwt_refresh_expiry_days: int = Field(
         ..., description="Expiry time of JWT refresh tokens in days"
     )
+    
+class LLMConfig(BaseModel):
+    api_key: str = Field(..., description="API key for the LLM service")
+    api_base: str = Field(..., description="Base URL for the LLM service")
+    api_version: str = Field(..., description="API version for the LLM service")
+    llm_deployment_name: str = Field(..., description="LLM deployment name for the LLM service")
 
 
 class OLAApiConfig(BaseModel):
@@ -42,6 +48,7 @@ class ServiceConfig(BaseModel):
     jwt_config: JWTConfig = Field(..., description="Configuration for the JWT tokens")
     ola_config: OLAApiConfig = Field(..., description="Configuration for the OLA API")
     twilio_config: TwilioConfig = Field(..., description="Configuration for the Twilio API")
+    llm_config: LLMConfig = Field(..., description="Configuration for the LLM service")
 
     @classmethod
     def load_config(cls) -> "ServiceConfig":
@@ -67,6 +74,12 @@ class ServiceConfig(BaseModel):
             auth_token=os.getenv("TWILIO_AUTH_TOKEN", None),
             phone_number=os.getenv("TWILIO_PHONE_NUMBER", None),
         )
+        llm_config = LLMConfig(
+            api_key=os.getenv("AZURE_OPENAI_API_KEY", None),
+            api_base=os.getenv("AZURE_OPENAI_API_BASE", None),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION", None),
+            llm_deployment_name=os.getenv("AZURE_OPENAI_LLM_DEPLOYMENT_NAME", None),
+        )
         return ServiceConfig(
-            mongo_config=mongo_config, jwt_config=jwt_config, ola_config=ola_config, twilio_config=twilio_config
+            mongo_config=mongo_config, jwt_config=jwt_config, ola_config=ola_config, twilio_config=twilio_config, llm_config=llm_config
         )

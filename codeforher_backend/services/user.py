@@ -63,7 +63,7 @@ class UserService:
             user["_id"], expires_in=self.jwt_config.jwt_refresh_expiry_days * 24 * 60
         )
 
-        return {"access_token": access_token, "refresh_token": refresh_token}
+        return {"access_token": access_token, "refresh_token": refresh_token, "user_id":  str(user["_id"])}
 
     def refresh_token(self, token: str) -> Dict:
         """Generates a new access token using a refresh token"""
