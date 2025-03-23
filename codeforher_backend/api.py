@@ -14,6 +14,8 @@ from codeforher_backend.services.map_service import MapService
 from codeforher_backend.services.sos_alert import SOSMessageService
 from codeforher_backend.services.user import UserService
 from codeforher_backend.services.llm_service import LLMService
+from codeforher_backend.services.agent_service import router as agent_router
+from codeforher_backend.schema import UserInput, StreamInput, Feedback, ChatHistoryInput
 LOG = get_logger("Backend API")
 
 app = FastAPI()
@@ -23,6 +25,9 @@ BASE_URL = "/api"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{BASE_URL}/login")
 service_config = ServiceConfig.load_config()
+
+# Include agent service routes
+app.include_router(agent_router, prefix=f"{BASE_URL}/agent", tags=["agent"])
 
 # ----------- AUTH ENDPOINTS ------------
 

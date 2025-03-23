@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "codeforher-backend"
+name = "codeforher_backend"
 version = "0.1.0"
 description = ""
 authors = ["Ashish K <64360092+Ashishkumaraswamy@users.noreply.github.com>"]
 readme = "README.md"
+packages = [{ include = "codeforher_backend" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -23,6 +24,8 @@ structlog = "^25.2.0"
 langchain = "^0.3.21"
 langchain-community = "^0.3.20"
 openai = "^1.68.2"
+langgraph-api = "^0.0.32"
+langgraph-cli = "^0.1.79"
 
 
 [build-system]
