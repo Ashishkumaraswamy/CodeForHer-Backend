@@ -25,14 +25,13 @@ class LLMService:
         
     def get_route_safety(self, route_safety_request: RouteSafetyRequest) -> RouteSafetyResponse:
         """Get safety analysis for a route using LLM"""
+        print(route_safety_request.model_dump())
         try:
             # Format route steps for the prompt
             route_text = "\n".join([
                 f"{i+1}. {step.instructions} ({step.distance} • {step.duration})"
                 for i, step in enumerate(route_safety_request.route_steps)
             ])
-            
-            
             
             # Get the chat prompt template
             prompt = get_route_safety_prompt()

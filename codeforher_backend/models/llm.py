@@ -10,10 +10,10 @@ class RouteSafetyRequest(BaseModel):
     route_steps: List[RouteStep]
 
 class RouteSafetyResponse(BaseModel):
-    general_insights: str | dict
-    safety_tips: str | dict 
-    road_conditions: str | dict
-    areas_of_concern: str | dict
+    general_insights: str
+    safety_tips: dict 
+    road_conditions: dict
+    areas_of_concern: dict
 
 
     

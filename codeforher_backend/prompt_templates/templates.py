@@ -19,10 +19,10 @@ def get_route_safety_prompt() -> ChatPromptTemplate:
     Return a valid JSON object following this structure:
     ```json
     {{
-        "general_insights" : <general insights about the route>,
-        "safety_tips" : <safety tips for different times of day>,
-        "road_conditions" : <road conditions and traffic patterns>,
-        "areas_of_concern" : <specific areas of concern>
+        "general_insights" : <general insights about the route> str output,
+        "safety_tips" : <safety tips for different times of day> dict output,
+        "road_conditions" : <road conditions and traffic patterns> dict output,
+        "areas_of_concern" : <specific areas of concern> dict output
     }}
     ```
     
