@@ -1,5 +1,7 @@
 [build]
-  command = "pip install -r requirements.txt && python codeforher_backend/api.py"
+  command = "pip install poetry && \
+  poetry install --no-root && \ 
+  poetry run python codeforher_backend/api.py"
   publish = "."
   
 [context.production.environment]
