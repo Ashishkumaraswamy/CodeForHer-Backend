@@ -9,6 +9,10 @@ from codeforher_backend.schema.models import (AllModelEnum, AnthropicModelName, 
                            FakeModelName, GoogleModelName, GroqModelName,
                            OllamaModelName, OpenAIModelName)
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 _MODEL_TABLE = {
     OpenAIModelName.GPT_4O_MINI: "gpt-4o-mini",
     OpenAIModelName.GPT_4O: "gpt-4o",
@@ -37,7 +41,7 @@ def get_model(model_name: AllModelEnum, /) -> ModelT:
         raise ValueError(f"Unsupported model: {model_name}")
 
     return AzureChatOpenAI(
-        api_key="3e33b1a703db4eaf800657cfff73e2db",
+        api_key=os.getenv("OPENAI_API_KEY"),
         openai_api_version="2024-02-01",
         azure_deployment="dg-llm-service-gpt-4o",
         azure_endpoint="https://dg-llm-service-dev.openai.azure.com/",
