@@ -5,3 +5,4 @@
 [context.production.environment]
   PYTHON_VERSION = "3.12"  # or your preferred Python version
   PORT = "8080"
+  PYTHONPATH = "/opt/build/repo"
