@@ -26,7 +26,7 @@
     <a href="https://github.com/Ashishkumaraswamy/CodeForHer-Backend/issues">Request Feature</a>
     <br />
     <br />
-    🔗 <a href="[https://example.com/codeforher-hackathon-winners](https://www.hindustantimes.com/genesis/safer-roads-by-code-india-s-next-gen-hack-transforming-safety-101750678135616.html)">Know More About the Hackathon »</a>
+    🔗 <a href="https://example.com/codeforher-hackathon-winners">Know More About the Hackathon »</a>
   </p>
 </div>
 
